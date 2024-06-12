@@ -1,0 +1,7 @@
+services: 
+  go-app:
+    build: ./docker 
+    container_name: app
+    tty: true
+    volumes:
+      - .:/go/src/app
