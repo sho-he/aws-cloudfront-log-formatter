@@ -1,14 +1,15 @@
 package usecases
 
 import (
-	"fmt"
+	"encoding/csv"
 	"os"
+	"strings"
 )
 
 type CsvInteractor struct {
 	fields *[]string
 	rows   *[]string
-	output *os.File
+	output *csv.Writer
 }
 
 func NewCsvInteractor(
@@ -19,16 +20,33 @@ func NewCsvInteractor(
 	return &CsvInteractor{
 		fields,
 		rows,
-		output,
+		csv.NewWriter(output),
 	}
 }
 
 func (c *CsvInteractor) Call() error {
-	fmt.Printf("Fields: %s\n", *c.fields)
-	fmt.Printf("Rows: %s\n", *c.rows)
+	if err := c.ConvertFields(); err != nil {
+		return err
+	}
+	if err := c.ConvertRows(); err != nil {
+		return err
+	}
+	c.output.Flush()
 	return nil
 }
 
 func (c *CsvInteractor) ConvertFields() error {
+	if err := c.output.Write(*c.fields); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *CsvInteractor) ConvertRows() error {
+	for _, row := range *c.rows {
+		if err := c.output.Write(strings.Fields(row)); err != nil {
+			return err
+		}
+	}
 	return nil
 }
