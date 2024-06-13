@@ -22,8 +22,9 @@ func main() {
 func call() {
 	data := readFile(*path)
 	fmt.Printf("Log Versin: %s\n", *getLogVersion(&data))
+	output := createFile(genOutputPath())
 	r := adapters.NewRouter()
-	r.Run(*format, getFields(&data), getRows(&data))
+	r.Run(*format, getFields(&data), getRows(&data), output)
 }
 
 func readFile(path string) string {
@@ -34,6 +35,19 @@ func readFile(path string) string {
 
 	return string(data)
 }
+
+func createFile(path string) *os.File {
+	f, err := os.Create(path)
+	if err != nil {
+		panic(err)
+	}
+	return f
+}
+
+func genOutputPath() string {
+	return *path + "." + *format
+}
+
 func getLogVersion(data *string) *string {
 	versionPattern := `#Version:\s\d*`
 	re := regexp.MustCompile(versionPattern)
