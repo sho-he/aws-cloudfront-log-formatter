@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -11,12 +12,23 @@ import (
 )
 
 var (
-	path   = flag.String("f", "../.test_data/test_data1", "file path")
+	path   = flag.String("f", "", "file path")
 	format = flag.String("t", "csv", "conversion format type")
 )
 
 func main() {
+	flag.Parse()
+	if err := valid(); err != nil {
+		panic(err)
+	}
 	call()
+}
+
+func valid() error {
+	if *path == "" {
+		return errors.New("file path (-f) option is required")
+	}
+	return nil
 }
 
 func call() {
