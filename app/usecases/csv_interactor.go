@@ -25,13 +25,13 @@ func NewCsvInteractor(
 }
 
 func (c *CsvInteractor) Call() error {
+	defer c.output.Flush()
 	if err := c.ConvertFields(); err != nil {
 		return err
 	}
 	if err := c.ConvertRows(); err != nil {
 		return err
 	}
-	c.output.Flush()
 	return nil
 }
 
