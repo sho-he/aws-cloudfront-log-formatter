@@ -1,10 +1,9 @@
 package adapters
 
 import (
-	"os"
-
 	"github.com/cockroachdb/errors"
 	"github.com/sho-he/aws-cloudfront-log-formatter/app/usecases"
+	"github.com/sho-he/aws-cloudfront-log-formatter/app/usecases/ports"
 )
 
 type Router struct {
@@ -16,15 +15,13 @@ func NewRouter() *Router {
 
 func (r *Router) Run(
 	format string,
-	fields *[]string,
-	rows *[]string,
-	output *os.File,
+	fileoperator ports.FileOperator,
 ) error {
 	switch format {
 	case "csv":
-		return usecases.NewCsvInteractor(fields, rows, output).Call()
+		return usecases.NewCsvInteractor(fileoperator).Call()
 	case "json":
-		return usecases.NewJsonInteractor(fields, rows, output).Call()
+		return nil
 	default:
 		return errors.Newf("invalid format: %s", format)
 	}

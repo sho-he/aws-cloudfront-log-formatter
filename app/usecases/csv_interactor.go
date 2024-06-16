@@ -2,51 +2,57 @@ package usecases
 
 import (
 	"encoding/csv"
-	"os"
+	"fmt"
+	"log/slog"
 	"strings"
+
+	cf "github.com/sho-he/aws-cloudfront-log-formatter/app/adapters/cloudfront"
+	"github.com/sho-he/aws-cloudfront-log-formatter/app/usecases/ports"
 )
 
 type CsvInteractor struct {
-	fields *[]string
-	rows   *[]string
-	output *csv.Writer
+	fileoperator ports.FileOperator
 }
 
 func NewCsvInteractor(
-	fields *[]string,
-	rows *[]string,
-	output *os.File,
+	fileoperator ports.FileOperator,
 ) *CsvInteractor {
 	return &CsvInteractor{
-		fields,
-		rows,
-		csv.NewWriter(output),
+		fileoperator,
 	}
 }
 
 func (c *CsvInteractor) Call() error {
-	defer c.output.Flush()
-	if err := c.ConvertFields(); err != nil {
+	data, err := c.fileoperator.ReadFile()
+	if err != nil {
 		return err
 	}
-	if err := c.ConvertRows(); err != nil {
+	ver := cf.GetLogVersion(data)
+	fmt.Printf("Log Versin: %s\n", *ver)
+	fields := cf.GetFields(data)
+	slog.Info("[csv] Complete Extract header fields")
+	rows := cf.GetRows(data)
+	slog.Info("[csv] Complete Extract rows")
+
+	output, err := c.fileoperator.CreateFile()
+	if err := c.Convert(csv.NewWriter(output), fields, rows); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *CsvInteractor) ConvertFields() error {
-	if err := c.output.Write(*c.fields); err != nil {
+func (c *CsvInteractor) Convert(output *csv.Writer, fields *[]string, rows *[]string) error {
+	defer output.Flush()
+	slog.Info("[csv] Conversion start")
+	if err := output.Write(*fields); err != nil {
 		return err
 	}
-	return nil
-}
-
-func (c *CsvInteractor) ConvertRows() error {
-	for _, row := range *c.rows {
-		if err := c.output.Write(strings.Fields(row)); err != nil {
+	slog.Info("[csv] Header was inserted.")
+	for _, row := range *rows {
+		if err := output.Write(strings.Fields(row)); err != nil {
 			return err
 		}
 	}
+	slog.Info("[csv] All rows were inserted.")
 	return nil
 }
