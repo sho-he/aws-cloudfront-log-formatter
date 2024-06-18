@@ -6,8 +6,8 @@ import (
 	"log/slog"
 	"strings"
 
-	cf "github.com/sho-he/aws-cloudfront-log-formatter/app/adapters/cloudfront"
-	"github.com/sho-he/aws-cloudfront-log-formatter/app/usecases/ports"
+	cf "github.com/sho-he/aws-cloudfront-log-formatter/adapters/cloudfront"
+	"github.com/sho-he/aws-cloudfront-log-formatter/usecases/ports"
 )
 
 type CsvInteractor struct {

@@ -2,8 +2,8 @@ package adapters
 
 import (
 	"github.com/cockroachdb/errors"
-	"github.com/sho-he/aws-cloudfront-log-formatter/app/usecases"
-	"github.com/sho-he/aws-cloudfront-log-formatter/app/usecases/ports"
+	"github.com/sho-he/aws-cloudfront-log-formatter/usecases"
+	"github.com/sho-he/aws-cloudfront-log-formatter/usecases/ports"
 )
 
 type Router struct {
