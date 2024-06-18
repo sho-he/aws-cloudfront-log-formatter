@@ -4,9 +4,9 @@ import (
 	"errors"
 	"flag"
 
-	"github.com/sho-he/aws-cloudfront-log-formatter/app/adapters"
-	"github.com/sho-he/aws-cloudfront-log-formatter/app/adapters/fileoperators"
-	"github.com/sho-he/aws-cloudfront-log-formatter/app/drivers/local"
+	"github.com/sho-he/aws-cloudfront-log-formatter/adapters"
+	"github.com/sho-he/aws-cloudfront-log-formatter/adapters/fileoperators"
+	"github.com/sho-he/aws-cloudfront-log-formatter/drivers/local"
 )
 
 var (
