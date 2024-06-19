@@ -27,7 +27,10 @@ func (c *CsvInteractor) Call() error {
 	if err != nil {
 		return err
 	}
-	ver := cf.GetLogVersion(data)
+	ver, err := cf.GetLogVersion(data)
+	if err != nil {
+		return err
+	}
 	fmt.Printf("Log Versin: %s\n", *ver)
 	fields := cf.GetFields(data)
 	slog.Info("[csv] Complete Extract header fields")
