@@ -27,14 +27,21 @@ func (c *CsvInteractor) Call() error {
 	if err != nil {
 		return err
 	}
-	ver, err := cf.GetLogVersion(data)
+	format := cf.NewCloudfrontLogFormat(data)
+	ver, err := format.GetLogVersion()
 	if err != nil {
 		return err
 	}
 	fmt.Printf("Log Versin: %s\n", *ver)
-	fields := cf.GetFields(data)
+	fields, err := format.GetFields()
+	if err != nil {
+		return err
+	}
 	slog.Info("[csv] Complete Extract header fields")
-	rows := cf.GetRows(data)
+	rows, err := format.GetRows()
+	if err != nil {
+		return err
+	}
 	slog.Info("[csv] Complete Extract rows")
 
 	output, err := c.fileoperator.CreateFile()
