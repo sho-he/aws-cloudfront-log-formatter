@@ -2,7 +2,10 @@ module github.com/sho-he/aws-cloudfront-log-formatter
 
 go 1.22.4
 
-require github.com/cockroachdb/errors v1.11.1
+require (
+	github.com/cockroachdb/errors v1.11.1
+	github.com/google/go-cmp v0.5.9
+)
 
 require (
 	github.com/cockroachdb/logtags v0.0.0-20230118201751-21c54148d20b // indirect
