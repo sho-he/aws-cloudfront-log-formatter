@@ -1,6 +1,6 @@
 # About
 
-This is the command to convert AWS Cloudfront access log to csv format.
+This is the command to convert AWS Cloudfront access log to CSV or JSON format.
 
 # Sample
 ```
