@@ -21,7 +21,7 @@ func (r *Router) Run(
 	case "csv":
 		return usecases.NewCsvInteractor(fileoperator).Call()
 	case "json":
-		return nil
+		return usecases.NewJsonInteractor(fileoperator).Call()
 	default:
 		return errors.Newf("invalid format: %s", format)
 	}
