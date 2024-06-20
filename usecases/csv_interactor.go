@@ -32,37 +32,33 @@ func (c *CsvInteractor) Call() error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Log Versin: %s\n", *ver)
+	fmt.Printf("Cloudfront Log Format Versin: %s\n", *ver)
 	fields, err := format.GetFields()
 	if err != nil {
 		return err
 	}
-	slog.Info("[csv] Complete Extract header fields")
 	rows, err := format.GetRows()
 	if err != nil {
 		return err
 	}
-	slog.Info("[csv] Complete Extract rows")
-
 	output, err := c.fileoperator.CreateFile()
+	slog.Info("=== CSV Conversion Start ===")
 	if err := c.Convert(csv.NewWriter(output), fields, rows); err != nil {
 		return err
 	}
+	slog.Info("=== CSV Conversion Complete ===")
 	return nil
 }
 
 func (c *CsvInteractor) Convert(output *csv.Writer, fields *[]string, rows *[]string) error {
 	defer output.Flush()
-	slog.Info("[csv] Conversion start")
 	if err := output.Write(*fields); err != nil {
 		return err
 	}
-	slog.Info("[csv] Header was inserted.")
 	for _, row := range *rows {
 		if err := output.Write(strings.Fields(row)); err != nil {
 			return err
 		}
 	}
-	slog.Info("[csv] All rows were inserted.")
 	return nil
 }
